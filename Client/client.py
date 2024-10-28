@@ -1,4 +1,6 @@
 import socket
+from Client.screen_capturing import screen_capturing
+from Client.utils import clear_screen
 from list_start_stop_app import list_start_stop_app
 from list_start_stop_service import list_start_stop_service
 
@@ -40,9 +42,11 @@ def main():
             continue
 
     while True:
+        clear_screen()
         print("\n--- MAIN MENU ---")
         print("1. Application Processing")
         print("2. Service Processing")
+        print("4. Server Screen Processing")
         print("6. Exit")
         choice = input("Enter your choice: ")
 
@@ -50,6 +54,12 @@ def main():
             list_start_stop_app(client_socket)
         if choice == '2':
             list_start_stop_service(client_socket)   
+        if choice == '4':
+            client_socket.sendall("SCREEN_CAPTURING".encode())
+            screen_capturing(client_socket)   
+        if choice == '5':
+            client_socket.sendall("SCREEN_CAPTURING".encode())
+            screen_capturing(client_socket)   
         elif choice == '6':
             client_socket.close()
             print("Disconnected from server.")
