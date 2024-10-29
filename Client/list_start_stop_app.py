@@ -2,7 +2,7 @@
 import socket
 import subprocess
 import platform
-from Client.utils import clear_screen
+from utils import clear_screen
 
 def list_running_apps():
     # Chạy lệnh tasklist để lấy danh sách ứng dụng đang chạy
