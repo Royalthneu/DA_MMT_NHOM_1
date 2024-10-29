@@ -1,17 +1,27 @@
 #list_start_stop_app.py
 import socket
 import subprocess
+import platform
+from Client.utils import clear_screen
 
 def list_running_apps():
     # Chạy lệnh tasklist để lấy danh sách ứng dụng đang chạy
     try:
-        output = subprocess.check_output("tasklist", encoding='utf-8')
+        print("platform.system():", platform.system())  # Output the current OS
+        if platform.system() == "Windows":
+            # For Windows
+            output = subprocess.check_output("tasklist", encoding='utf-8')
+        else:
+            # For macOS and Linux
+            output = subprocess.check_output("ps aux", shell=True, encoding='utf-8')
+        
         return output
     except subprocess.CalledProcessError as e:
         print(f"Error while fetching running applications: {e}")
         return ""
 
 def list_start_stop_app(client_socket):
+    clear_screen()
     while True:
         print("\n--- APPLICATION PROCESSING ---")
         print("1. List Applications Running")
