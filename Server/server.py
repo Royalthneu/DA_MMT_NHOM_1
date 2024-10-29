@@ -4,6 +4,8 @@ import subprocess
 from screen_capturing_server import screen_capturing
 from list_start_stop_app_server import list_running_applications, list_not_running_applications, start_application, stop_application
 from list_start_stop_service_server import list_not_running_services, list_running_services, start_service, stop_service
+from shutdown_reset_server import shutdown_server, reset_server
+from Server.delete_copy_paste_server import delete_file, copy_file
 
 PORT = 8080
 BUFFER_SIZE = 1024
@@ -24,9 +26,7 @@ def handle_client(client_socket):
                 list_not_running_applications(client_socket)
             elif buffer.startswith("START_APP"):
                 app_name = buffer.split()[1]
-                start_application(client_socket, app_name)
-            elif buffer.startswith("SCREEN_CAPTURING"):
-                screen_capturing(client_socket)
+                start_application(client_socket, app_name) 
             elif buffer.startswith("STOP_APP"):
                 pid = int(buffer.split()[1])
                 stop_application(client_socket, pid)
@@ -42,7 +42,26 @@ def handle_client(client_socket):
                 start_service(client_socket, service_name)
             elif buffer.startswith("STOP_SERVICE"):
                 service_name = buffer.split()[1]
-                stop_service(client_socket, service_name)                
+                stop_service(client_socket, service_name) 
+            
+            # Yêu cầu 3 Shutdown/Reset máy SERVER
+            elif buffer == "SHUTDOWN_SERVER":
+                shutdown_server(client_socket)
+            elif buffer == "RESET_SERVER":
+                reset_server(client_socket)
+            
+            
+            # Yêu cầu 4. Xem màn hình hiện thời của máy SERVER
+            elif buffer.startswith("SCREEN_CAPTURING"):
+                screen_capturing(client_socket)
+                
+            # Yêu cầu 6. Xóa files ; Copy files từ máy SERVER
+            elif buffer.startswith("DELETE_FILE"):
+                file_path = buffer.split(" ", 1)[1]  # Lấy đường dẫn file từ lệnh
+                delete_file(client_socket, file_path)
+            elif buffer.startswith("COPY_FILE"):
+                file_path = buffer.split(" ", 1)[1]  # Lấy đường dẫn file từ lệnh
+                copy_file(client_socket, file_path)               
                 
                 
             elif buffer.startswith("GO BACK MENU LIST"):
