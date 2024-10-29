@@ -44,7 +44,6 @@ def main():
             continue
 
     while True:
-        clear_screen()
         print("\n--- MAIN MENU ---")
         print("1. Application Processing")
         print("2. Service Processing")
