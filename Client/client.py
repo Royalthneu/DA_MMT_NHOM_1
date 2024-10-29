@@ -56,10 +56,7 @@ def main():
             list_start_stop_service(client_socket)   
         if choice == '4':
             client_socket.sendall("SCREEN_CAPTURING".encode())
-            screen_capturing(client_socket)   
-        if choice == '5':
-            client_socket.sendall("SCREEN_CAPTURING".encode())
-            screen_capturing(client_socket)   
+            screen_capturing(client_socket)            
         elif choice == '6':
             client_socket.close()
             print("Disconnected from server.")
