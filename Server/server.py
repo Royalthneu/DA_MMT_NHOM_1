@@ -1,6 +1,7 @@
 import socket
 import threading
 import subprocess
+from screen_capturing_server import screen_capturing
 from list_start_stop_app_server import list_running_applications, list_not_running_applications, start_application, stop_application
 from list_start_stop_service_server import list_not_running_services, list_running_services, start_service, stop_service
 
@@ -24,6 +25,8 @@ def handle_client(client_socket):
             elif buffer.startswith("START_APP"):
                 app_name = buffer.split()[1]
                 start_application(client_socket, app_name)
+            elif buffer.startswith("SCREEN_CAPTURING"):
+                screen_capturing(client_socket)
             elif buffer.startswith("STOP_APP"):
                 pid = int(buffer.split()[1])
                 stop_application(client_socket, pid)
