@@ -1,6 +1,6 @@
 import socket
-from Client.screen_capturing import screen_capturing
-from Client.utils import clear_screen
+from screen_capturing import screen_capturing
+from utils import clear_screen
 from list_start_stop_app import list_start_stop_app
 from list_start_stop_service import list_start_stop_service
 
