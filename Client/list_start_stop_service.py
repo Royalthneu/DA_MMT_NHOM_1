@@ -44,30 +44,42 @@ def list_start_stop_service(client_socket):
 
         if choice == '1':
             # Liệt kê tất cả các dịch vụ đang chạy
-            running_services = list_running_services()  # Gọi mà không có tham số
-            print("\nServices Running:\n")
-            print(running_services)  # In toàn bộ danh sách dịch vụ
-
+            running_services = list_running_services()  # Gọi hàm để lấy danh sách dịch vụ
+            if not running_services.strip():  # Kiểm tra nếu danh sách trống
+                print("\nNo services are currently running.\n")
+            else:
+                print("\nServices Running:\n")
+                print(running_services)  # In toàn bộ danh sách dịch vụ
+        
         elif choice == '2':
-            # Dừng service theo tên
+            # Dừng dịch vụ theo tên
             service_name = input("Enter name of the service to stop: ")
             client_socket.sendall(f"STOP SERVICE {service_name}".encode())
             response = client_socket.recv(4096).decode()
-            print(response)
-
+            if "not found" in response.lower() or "already stopped" in response.lower():
+                print(f"The service '{service_name}' is either not running or does not exist.")
+            else:
+                print(response)
+        
         elif choice == '3':
-            # Liệt kê các services chưa chạy
+            # Liệt kê các dịch vụ chưa chạy
             client_socket.sendall("LIST_SERVICE_NOT_RUNNING".encode())
             not_running_services = client_socket.recv(4096).decode()
-            print("\nServices Not Running:\n", not_running_services)
-
+            if not not_running_services.strip():  # Kiểm tra nếu danh sách trống
+                print("\nAll allowed services are already running.\n")
+            else:
+                print("\nServices Not Running:\n", not_running_services)
+        
         elif choice == '4':
-            # Khởi chạy service
+            # Khởi chạy dịch vụ
             service_name = input("Enter the name of the service to start (e.g., wuauserv, bits): ")
             client_socket.sendall(f"START SERVICE {service_name}".encode())
             response = client_socket.recv(4096).decode()
-            print(response)      
-
+            if "not allowed" in response.lower() or "not installed" in response.lower():
+                print(f"The service '{service_name}' is either not installed or not allowed to start.")
+            else:
+                print(response)
+        
         elif choice == '5':
             print("Going back to the main menu.")
             break
