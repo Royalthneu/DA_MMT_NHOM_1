@@ -43,7 +43,7 @@ def list_start_stop_app(client_socket):
             # Dừng ứng dụng theo PID
             pid = input("Enter PID of the application to stop: ")
             if pid.isdigit():  # Kiểm tra xem PID có phải là số không
-                client_socket.sendall(f"STOP APP {pid}".encode())
+                client_socket.sendall(f"STOP_APP {pid}".encode())
                 response = client_socket.recv(4096).decode()
                 print(response)
             else:
@@ -58,7 +58,7 @@ def list_start_stop_app(client_socket):
         elif choice == '4':
             # Khởi chạy ứng dụng
             app_name = input("Enter the name of the application to start (e.g., notepad.exe, calc.exe): ")
-            client_socket.sendall(f"START APP {app_name}".encode())
+            client_socket.sendall(f"START_APP {app_name}".encode())
             response = client_socket.recv(4096).decode()
             print(response)      
 
