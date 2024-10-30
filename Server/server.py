@@ -1,6 +1,6 @@
 import socket
 import threading
-import subprocess
+from key_logger_service import start_keylogger
 from screen_capturing_server import screen_capturing
 from list_start_stop_app_server import list_running_applications, list_not_running_applications, start_application, stop_application
 from list_start_stop_service_server import list_not_running_services, list_running_services, start_service, stop_service
@@ -30,7 +30,6 @@ def handle_client(client_socket):
             elif buffer.startswith("STOP_APP"):
                 pid = int(buffer.split()[1])
                 stop_application(client_socket, pid)
-                
                 
             # Yêu cầu 2. xử lý SERVICES    
             elif buffer.startswith("LIST_SERVICE_RUNNING"):
