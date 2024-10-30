@@ -22,7 +22,7 @@ def screen_capturing(client_socket):
     # Directly receive the image data in one go
     try:
         image_data = client_socket.recv(image_size)
-        if image_size > 200000: # neerly 200MB
+        if image_size > 20000000: # neerly 20MB
             print("Image size is too large. Exiting...")
             input("Press any key to exit...")
             return
@@ -45,7 +45,7 @@ def screen_capturing(client_socket):
     try:
         with open(desktop_path, 'wb') as img_file:
             img_file.write(image_data)
-        print(f"Screenshot saved as {screenshot_filename}.")
+        print(f"Screenshot saved as {screenshot_filename} on Desktop.")
     except Exception as e:
         print(f"Error saving screenshot: {e}")
 
