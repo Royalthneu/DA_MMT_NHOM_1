@@ -1,6 +1,6 @@
 **Trước khi chạy chương trình cần cài đặt thêm các thư viện sau**
 
-pip install pyautogui\n
+pip install pyautogui
 
 pip install pillow
 
