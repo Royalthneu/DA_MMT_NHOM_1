@@ -4,22 +4,6 @@ import subprocess
 import platform
 from utils import clear_screen
 
-def list_running_apps():
-    # Chạy lệnh tasklist để lấy danh sách ứng dụng đang chạy
-    try:
-        print("platform.system():", platform.system())  # Output the current OS
-        if platform.system() == "Windows":
-            # For Windows
-            output = subprocess.check_output("tasklist", encoding='utf-8')
-        else:
-            # For macOS and Linux
-            output = subprocess.check_output("ps aux", shell=True, encoding='utf-8')
-        
-        return output
-    except subprocess.CalledProcessError as e:
-        print(f"Error while fetching running applications: {e}")
-        return ""
-
 def list_start_stop_app(client_socket):
     clear_screen()
     while True:
@@ -34,12 +18,12 @@ def list_start_stop_app(client_socket):
 
         if choice == '1':
             # Liệt kê tất cả các ứng dụng đang chạy
-            running_apps = list_running_apps()  # Gọi hàm để lấy danh sách ứng dụng
+            client_socket.sendall("LIST_APP_RUNNING".encode())
+            running_apps = client_socket.recv(65535).decode()
             if not running_apps.strip():  # Kiểm tra nếu danh sách trống
-                print("\nNo applications are currently running.\n")
+                print("\nAll allowed applications are not running.\n")
             else:
-                print("\nApplications Running:\n")
-                print(running_apps)  # In toàn bộ danh sách ứng dụng
+                print("\nApplications Running:\n", running_apps)
         
         elif choice == '2':
             # Dừng ứng dụng theo PID

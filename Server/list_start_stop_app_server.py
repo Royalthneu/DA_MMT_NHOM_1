@@ -1,4 +1,5 @@
 #list_start_stop_app_server.py
+import platform
 import subprocess
 import socket
 
@@ -12,13 +13,21 @@ def is_application_allowed(app_name):
 # Liệt kê các tiến trình đang chạy
 def list_running_applications(client_socket):
     try:
-        # Chạy lệnh tasklist để lấy danh sách các ứng dụng đang chạy
-        output = subprocess.check_output("tasklist", encoding='utf-8')
-        # Gửi toàn bộ đầu ra cho client
-        client_socket.sendall(output.encode())
-    except subprocess.CalledProcessError as e:
-        error_msg = f"Error retrieving running applications: {e}\n"
-        client_socket.send(error_msg.encode())
+        print("platform.system():", platform.system())  # Kiểm tra hệ điều hành
+        if platform.system() == "Windows":
+            # Trên Windows
+            output = subprocess.check_output("tasklist", encoding='utf-8')
+        else:
+            # Trên macOS và Linux
+            output = subprocess.check_output("ps aux", shell=True, encoding='utf-8')
+        
+        # Gửi danh sách ứng dụng đang chạy về client
+        client_socket.sendall(output.encode('utf-8'))    
+    
+    except Exception as e:
+        error_msg = f"Unexpected error: {e}"
+        print(error_msg)
+        client_socket.sendall(error_msg.encode('utf-8'))        
 
 # Liệt kê các ứng dụng chưa chạy
 def list_not_running_applications(client_socket):
@@ -84,9 +93,9 @@ def start_server():
             # Nhận lệnh từ client
             command = client_socket.recv(1024).decode().strip()
 
-            if command == "LIST_RUNNING":
+            if command == "LIST_APP_RUNNING":
                 list_running_applications(client_socket)
-            elif command == "LIST_NOT_RUNNING":
+            elif command == "LIST_APP_NOT_RUNNING":
                 list_not_running_applications(client_socket)
             elif command.startswith("START"):
                 app_name = command.split(" ", 1)[1]  # Lấy tên ứng dụng từ lệnh
