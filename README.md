@@ -7,3 +7,5 @@ docker build -t python-server .
 docker run -it python-server
 
 //DOCKER đã test, và không thực hiện chụp được màn hình server do không có kích thước màn hình
+
+**Đường link xóa phải trong ngoặc kép "":**
