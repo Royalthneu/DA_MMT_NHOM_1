@@ -1,0 +1,15 @@
+Cài đặt các thư viện:
++ pyautogui
++ pillow
+
+Tắt firewall trên máy ảo server
+  
+Chạy server.py trên máy ảo server trước
+
+Chạy client.py trên máy client
+
+Chức năng 1.2 Stop App thì điền số PID
+
+Chức năng 1.4 Start App điển tên app và thêm đuôi ".exe"
+
+Chức năng 5 Delete đường dẫn phải để trong ngoặc kép
