@@ -35,23 +35,19 @@ RUN $url = ('https://www.python.org/ftp/python/{0}/python-{1}-amd64.exe' -f ($en
     Remove-Item python.exe -Force; \
     Write-Host 'Complete.'
 
-CMD ["python"]
+# Sao chép toàn bộ thư mục server vào container
+COPY server /app
 
-# Đặt thư mục làm việc trong container
+# Chuyển đến thư mục /app
 WORKDIR /app
 
-# Sao chép tất cả file từ thư mục `server` vào container
-COPY . /app
-
-# Cài đặt các gói yêu cầu từ `requirements.txt`, nếu có
-RUN if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-# Sao chép và thiết lập quyền thực thi cho entrypoint.sh
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+# Cài đặt các gói yêu cầu từ requirements.txt, nếu có
+# RUN if (Test-Path requirements.txt) { pip install -r requirements.txt }
+RUN pip install pyautogui
+RUN pip install pillow
 
 # Mở cổng 8080 để server có thể nghe
 EXPOSE 8080
 
-# Sử dụng entrypoint.sh để chạy tất cả file Python
-CMD ["/app/entrypoint.sh"]
+# Chạy file server.py
+CMD ["python", "server.py"]
