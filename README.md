@@ -2,7 +2,8 @@
 
 docker build -t python-server .
 
-**Khởi động server docker và mở port 8080**
+**Khởi động server docker**
 
-docker run -p 8080:8080 python-server
+docker run -it python-server
 
+//DOCKER đã test, và không thực hiện chụp được màn hình server do không có kích thước màn hình
