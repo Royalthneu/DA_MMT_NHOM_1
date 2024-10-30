@@ -1,11 +1,8 @@
-**Trước khi chạy chương trình cần cài đặt thêm các thư viện sau**
+**Cài đặt dockerfile cho server ảo**
 
-pip install pyautogui
+docker build -t python-server .
 
-pip install pillow
+**Khởi động server docker và mở port 8080**
 
-**Câu lệnh copy và câu lệnh paste:**
+docker run -p 8080:8080 python-server
 
-Nếu path có dấu cách thì ghi: r"[Đường dẫn nguồn file]"
-
-Nếu path không có dấu cách thì ghi: [Đường dẫn đến folder đích] (Không có r và ngoặc kép "")
