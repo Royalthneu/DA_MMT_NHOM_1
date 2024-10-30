@@ -1,6 +1,7 @@
 import socket
 from delete_copy_paste import copy_file_from_server, delete_file_from_server
 from shutdown_reset import reset_server, shutdown_server
+from key_logger import key_logger
 from screen_capturing import screen_capturing
 from utils import clear_screen
 from list_start_stop_app import list_start_stop_app
@@ -52,7 +53,8 @@ def main():
         print("5. Delete File from Server")
         print("6. Copy File from Server")
         print("7. Server Screen Processing")
-        print("8. Exit")
+        print("8. Key Logger Processing")
+        print("0. Exit")
         choice = input("Enter your choice: ")
 
         if choice == '1':
@@ -71,6 +73,8 @@ def main():
         elif choice == '7':
             screen_capturing(client_socket)
         elif choice == '8':
+            key_logger(client_socket)
+        elif choice == '0':
             client_socket.close()
             print("Disconnected from server.")
             break
