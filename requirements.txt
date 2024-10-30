@@ -1,2 +1,4 @@
 pyautogui
 pillow
+pynput
+keyboard

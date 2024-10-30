@@ -88,8 +88,7 @@ def list_start_stop_service(client_socket):
             print("Invalid choice. Please try again.")
 
 # Khởi tạo socket và gọi hàm
-if __name__ == "__main__":
-    # Đây chỉ là ví dụ, bạn có thể thay đổi cách kết nối đến server
+if __name__ == "__main__":    
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect(('localhost', 8080))  # Địa chỉ IP và port của server
     list_start_stop_service(client_socket)

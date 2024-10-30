@@ -49,7 +49,7 @@ def list_start_stop_app(client_socket):
         
         elif choice == '4':
             # Khởi chạy ứng dụng
-            app_name = input("Enter the name of the application to start (e.g: notepad.exe, calc.exe): ")
+            app_name = input("Enter the name of the application to start (e.g: notepad.exe): ")
             client_socket.sendall(f"START_APP {app_name}".encode())
             response = client_socket.recv(4096).decode()
             if "not allowed" in response.lower() or "not installed" in response.lower():
@@ -65,8 +65,7 @@ def list_start_stop_app(client_socket):
             print("Invalid choice. Please try again.")
 
 # Khởi tạo socket và gọi hàm
-if __name__ == "__main__":
-    # Đây chỉ là ví dụ, bạn có thể thay đổi cách kết nối đến server
+if __name__ == "__main__":    
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect(('localhost', 12345))  # Địa chỉ IP và port của server
     list_start_stop_app(client_socket)
