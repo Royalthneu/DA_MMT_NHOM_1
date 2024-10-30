@@ -1,6 +1,5 @@
 import socket
 import threading
-import subprocess
 from screen_capturing_server import screen_capturing
 from list_start_stop_app_server import list_running_applications, list_not_running_applications, start_application, stop_application
 from list_start_stop_service_server import list_not_running_services, list_running_services, start_service, stop_service
@@ -22,8 +21,8 @@ def handle_client(client_socket):
             #Yêu cầu 1. xử lý APP
             if buffer.startswith("LIST_APP_RUNNING"):
                 list_running_applications(client_socket)
-            elif buffer.startswith("LIST_APP_NOT_RUNNING"):
-                list_not_running_applications(client_socket)
+            # elif buffer.startswith("LIST_APP_NOT_RUNNING"):
+            #     list_not_running_applications(client_socket)
             elif buffer.startswith("START_APP"):
                 app_name = buffer.split()[1]
                 start_application(client_socket, app_name) 

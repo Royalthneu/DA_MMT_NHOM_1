@@ -3,12 +3,12 @@ import platform
 import subprocess
 import socket
 
-# Danh sách các ứng dụng được phép khởi chạy
-allowed_applications = {"notepad.exe", "calc.exe", "clock.exe", "calendar.exe"}
+# # Danh sách các ứng dụng được phép khởi chạy
+# allowed_applications = {"notepad.exe", "calc.exe"}
 
-# Kiểm tra xem ứng dụng có được phép khởi chạy không
-def is_application_allowed(app_name):
-    return app_name.lower() in allowed_applications
+# # Kiểm tra xem ứng dụng có được phép khởi chạy không
+# def is_application_allowed(app_name):
+#     return app_name.lower() in allowed_applications
 
 # Liệt kê các tiến trình đang chạy
 def list_running_applications(client_socket):
@@ -29,29 +29,29 @@ def list_running_applications(client_socket):
         print(error_msg)
         client_socket.sendall(error_msg.encode('utf-8'))        
 
-# Liệt kê các ứng dụng chưa chạy
-def list_not_running_applications(client_socket):
-    try:
-        # Lấy danh sách tiến trình đang chạy
-        result = subprocess.run(["tasklist"], capture_output=True, text=True)
-        running_apps = result.stdout.lower()
+# # Liệt kê các ứng dụng chưa chạy
+# def list_not_running_applications(client_socket):
+#     try:
+#         # Lấy danh sách tiến trình đang chạy
+#         result = subprocess.run(["tasklist"], capture_output=True, text=True)
+#         running_apps = result.stdout.lower()
         
-        # Tìm các ứng dụng trong allowed_applications nhưng chưa chạy
-        not_running_apps = [app for app in allowed_applications if app.lower() not in running_apps]
-        not_running_list = "\n".join(not_running_apps) + "\n"
+#         # Tìm các ứng dụng trong allowed_applications nhưng chưa chạy
+#         not_running_apps = [app for app in allowed_applications if app.lower() not in running_apps]
+#         not_running_list = "\n".join(not_running_apps) + "\n"
         
-        # Gửi danh sách ứng dụng chưa chạy về client
-        client_socket.sendall(not_running_list.encode())
-    except Exception as e:
-        error_msg = f"Error listing not running applications: {e}\n"
-        client_socket.sendall(error_msg.encode())
+#         # Gửi danh sách ứng dụng chưa chạy về client
+#         client_socket.sendall(not_running_list.encode())
+#     except Exception as e:
+#         error_msg = f"Error listing not running applications: {e}\n"
+#         client_socket.sendall(error_msg.encode())
 
 # Khởi chạy một ứng dụng
 def start_application(client_socket, app_name):
-    if not is_application_allowed(app_name):
-        error_msg = "Application is not allowed to start.\n"
-        client_socket.sendall(error_msg.encode())
-        return
+    # if not is_application_allowed(app_name):
+    #     error_msg = "Application is not allowed to start.\n"
+    #     client_socket.sendall(error_msg.encode())
+    #     return
 
     try:
         # Khởi chạy ứng dụng
@@ -95,8 +95,8 @@ def start_server():
 
             if command == "LIST_APP_RUNNING":
                 list_running_applications(client_socket)
-            elif command == "LIST_APP_NOT_RUNNING":
-                list_not_running_applications(client_socket)
+            # elif command == "LIST_APP_NOT_RUNNING":
+            #     list_not_running_applications(client_socket)
             elif command.startswith("START"):
                 app_name = command.split(" ", 1)[1]  # Lấy tên ứng dụng từ lệnh
                 start_application(client_socket, app_name)

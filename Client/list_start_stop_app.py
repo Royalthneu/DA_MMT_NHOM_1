@@ -10,7 +10,7 @@ def list_start_stop_app(client_socket):
         print("\n--- APPLICATION PROCESSING ---")
         print("1. List Applications Running")
         print("2. Stop Application by PID")
-        print("3. List Applications Not Running")
+        # print("3. List Applications Not Running")
         print("4. Start Application")       
         print("5. Go Back to Main Menu")
         
@@ -38,14 +38,14 @@ def list_start_stop_app(client_socket):
             else:
                 print("Invalid PID. Please enter a number.")
         
-        elif choice == '3':
-            # Liệt kê các ứng dụng chưa chạy
-            client_socket.sendall("LIST_APP_NOT_RUNNING".encode())
-            not_running_apps = client_socket.recv(4096).decode()
-            if not not_running_apps.strip():  # Kiểm tra nếu danh sách trống
-                print("\nAll allowed applications are already running.\n")
-            else:
-                print("\nApplications Not Running:\n", not_running_apps)
+        # elif choice == '3':
+        #     # Liệt kê các ứng dụng chưa chạy
+        #     client_socket.sendall("LIST_APP_NOT_RUNNING".encode())
+        #     not_running_apps = client_socket.recv(4096).decode()
+        #     if not not_running_apps.strip():  # Kiểm tra nếu danh sách trống
+        #         print("\nAll allowed applications are already running.\n")
+        #     else:
+        #         print("\nApplications Not Running:\n", not_running_apps)
         
         elif choice == '4':
             # Khởi chạy ứng dụng
