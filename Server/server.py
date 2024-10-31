@@ -5,7 +5,7 @@ from list_start_stop_app_server import list_running_applications, start_applicat
 from list_start_stop_service_server import list_not_running_services, list_running_services, start_service, stop_service
 from shutdown_reset_server import shutdown_server, reset_server
 from delete_copy_paste_server import delete_file, copy_file
-from key_logger_server import block_all_keys, start_keylogger, unblock_all_keys
+from key_logger_server import start_keylogger
 
 PORT = 8080
 BUFFER_SIZE = 1024
@@ -56,15 +56,7 @@ def handle_client(client_socket):
                 screen_capturing(client_socket)
                 
             # Yêu cầu 5. Khóa / Bắt phím nhấn (keylogger) ở máy SERVER
-            elif buffer == "BLOCK_KEYS":
-                block_all_keys()
-                client_socket.sendall("Keys are blocked. Press 'Esc' to unblock.".encode())
-            elif buffer == "UNBLOCK_KEYS":
-                unblock_all_keys()
-                client_socket.sendall("Keys are unblocked.".encode())
-            elif buffer.startswith("START_KEYLOGGER"):
-                start_keylogger(client_socket)            
-                client_socket.sendall("Keylogger started. Press 'Esc' to stop.".encode())          
+                     
                 
             # Yêu cầu 6. Xóa files ; Copy files từ máy SERVER
             elif buffer.startswith("DELETE_FILE"):
