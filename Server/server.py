@@ -77,7 +77,7 @@ def handle_client(client_socket):
             else:
                 print("Unknown command received.")
 
-            client_socket.sendall("Command received".encode())
+            # client_socket.sendall("Command received".encode())
     except Exception as e:
         print(f"An error occurred: {e}")
     finally:

