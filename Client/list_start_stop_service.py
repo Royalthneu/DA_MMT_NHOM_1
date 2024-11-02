@@ -36,9 +36,9 @@ def list_start_stop_service(client_socket):
         print("\n--- SERVICE PROCESSING ---")
         print("1. List Services Running")
         print("2. Stop Service by Name")
-        print("3. List Services Not Running")
-        print("4. Start Service")       
-        print("5. Go Back to Main Menu")
+        # print("3. List Services Not Running")
+        print("3. Start Service")       
+        print("0. Go Back to Main Menu")
         
         choice = input("Enter your choice: ")
 
@@ -61,16 +61,16 @@ def list_start_stop_service(client_socket):
             else:
                 print(response)
         
-        elif choice == '3':
-            # Liệt kê các dịch vụ chưa chạy
-            client_socket.sendall("LIST_SERVICE_NOT_RUNNING".encode())
-            not_running_services = client_socket.recv(4096).decode()
-            if not not_running_services.strip():  # Kiểm tra nếu danh sách trống
-                print("\nAll allowed services are already running.\n")
-            else:
-                print("\nServices Not Running:\n", not_running_services)
+        # elif choice == '3':
+        #     # Liệt kê các dịch vụ chưa chạy
+        #     client_socket.sendall("LIST_SERVICE_NOT_RUNNING".encode())
+        #     not_running_services = client_socket.recv(4096).decode()
+        #     if not not_running_services.strip():  # Kiểm tra nếu danh sách trống
+        #         print("\nAll allowed services are already running.\n")
+        #     else:
+        #         print("\nServices Not Running:\n", not_running_services)
         
-        elif choice == '4':
+        elif choice == '3':
             # Khởi chạy dịch vụ
             service_name = input("Enter the name of the service to start (e.g., wuauserv, bits): ")
             client_socket.sendall(f"START SERVICE {service_name}".encode())
@@ -80,7 +80,7 @@ def list_start_stop_service(client_socket):
             else:
                 print(response)
         
-        elif choice == '5':
+        elif choice == '0':
             print("Going back to the main menu.")
             break
 

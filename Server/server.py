@@ -2,7 +2,7 @@ import socket
 import threading
 from screen_capturing_server import screen_capturing
 from list_start_stop_app_server import list_running_applications, start_application, stop_application
-from list_start_stop_service_server import list_not_running_services, list_running_services, start_service, stop_service
+from list_start_stop_service_server import list_running_services, start_service, stop_service
 from shutdown_reset_server import shutdown_server, reset_server
 from delete_copy_paste_server import delete_file, copy_file
 from key_logger_server import start_keylogger
@@ -35,8 +35,8 @@ def handle_client(client_socket):
             # Yêu cầu 2. xử lý SERVICES    
             elif buffer.startswith("LIST_SERVICE_RUNNING"):
                 list_running_services(client_socket)
-            elif buffer.startswith("LIST_SERVICE_NOT_RUNNING"):
-                list_not_running_services(client_socket)
+            # elif buffer.startswith("LIST_SERVICE_NOT_RUNNING"):
+            #     list_not_running_services(client_socket)
             elif buffer.startswith("START_SERVICE"):
                 service_name = buffer.split()[1]
                 start_service(client_socket, service_name)

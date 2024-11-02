@@ -11,8 +11,8 @@ def list_start_stop_app(client_socket):
         print("1. List Applications Running")
         print("2. Stop Application by PID")
         # print("3. List Applications Not Running")
-        print("4. Start Application")       
-        print("5. Go Back to Main Menu")
+        print("3. Start Application")       
+        print("0. Go Back to Main Menu")
         
         choice = input("Enter your choice: ")
 
@@ -57,7 +57,7 @@ def list_start_stop_app(client_socket):
             else:
                 print(response)
         
-        elif choice == '5':
+        elif choice == '0':
             print("Going back to the main menu.")
             break
 

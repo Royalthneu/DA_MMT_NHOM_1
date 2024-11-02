@@ -19,22 +19,22 @@ def list_running_services(client_socket):
         error_msg = f"Error retrieving running services: {e}\n"
         client_socket.send(error_msg.encode())
 
-# Liệt kê các services chưa chạy
-def list_not_running_services(client_socket):
-    try:
-        # Lấy danh sách các service đang chạy
-        result = subprocess.run(["sc", "query"], capture_output=True, text=True)
-        running_services = result.stdout.lower()
+# # Liệt kê các services chưa chạy
+# def list_not_running_services(client_socket):
+#     try:
+#         # Lấy danh sách các service đang chạy
+#         result = subprocess.run(["sc", "query"], capture_output=True, text=True)
+#         running_services = result.stdout.lower()
         
-        # Tìm các services trong allowed_services nhưng chưa chạy
-        not_running_services = [service for service in allowed_services if service.lower() not in running_services]
-        not_running_list = "\n".join(not_running_services) + "\n"
+#         # Tìm các services trong allowed_services nhưng chưa chạy
+#         not_running_services = [service for service in allowed_services if service.lower() not in running_services]
+#         not_running_list = "\n".join(not_running_services) + "\n"
         
-        # Gửi danh sách services chưa chạy về client
-        client_socket.sendall(not_running_list.encode())
-    except Exception as e:
-        error_msg = f"Error listing not running services: {e}\n"
-        client_socket.sendall(error_msg.encode())
+#         # Gửi danh sách services chưa chạy về client
+#         client_socket.sendall(not_running_list.encode())
+#     except Exception as e:
+#         error_msg = f"Error listing not running services: {e}\n"
+#         client_socket.sendall(error_msg.encode())
 
 # Khởi chạy một service
 def start_service(client_socket, service_name):
@@ -85,8 +85,8 @@ def start_server():
 
             if command == "LIST_RUNNING":
                 list_running_services(client_socket)
-            elif command == "LIST_NOT_RUNNING":
-                list_not_running_services(client_socket)
+            # elif command == "LIST_NOT_RUNNING":
+            #     list_not_running_services(client_socket)
             elif command.startswith("START"):
                 service_name = command.split(" ", 1)[1]  # Lấy tên service từ lệnh
                 start_service(client_socket, service_name)
