@@ -30,64 +30,44 @@ def list_running_services():
     except subprocess.CalledProcessError as e:
         print(f"Error while fetching running services: {e}")
         return ""
-    
-def list_start_stop_service(client_socket):
-    while True:
-        print("\n--- SERVICE PROCESSING ---")
-        print("1. List Services Running")
-        print("2. Stop Service by Name")
-        # print("3. List Services Not Running")
-        print("3. Start Service")       
-        print("0. Go Back to Main Menu")
-        
-        choice = input("Enter your choice: ")
 
-        if choice == '1':
-            # Liệt kê tất cả các dịch vụ đang chạy
-            running_services = list_running_services()  # Gọi hàm để lấy danh sách dịch vụ
-            if not running_services.strip():  # Kiểm tra nếu danh sách trống
-                print("\nNo services are currently running.\n")
-            else:
-                print("\nServices Running:\n")
-                print(running_services)  # In toàn bộ danh sách dịch vụ
-        
-        elif choice == '2':
-            # Dừng dịch vụ theo tên
-            service_name = input("Enter name of the service to stop: ")
-            client_socket.sendall(f"STOP SERVICE {service_name}".encode())
-            response = client_socket.recv(4096).decode()
-            if "not found" in response.lower() or "already stopped" in response.lower():
-                print(f"The service '{service_name}' is either not running or does not exist.")
-            else:
-                print(response)
-        
-        # elif choice == '3':
-        #     # Liệt kê các dịch vụ chưa chạy
-        #     client_socket.sendall("LIST_SERVICE_NOT_RUNNING".encode())
-        #     not_running_services = client_socket.recv(4096).decode()
-        #     if not not_running_services.strip():  # Kiểm tra nếu danh sách trống
-        #         print("\nAll allowed services are already running.\n")
-        #     else:
-        #         print("\nServices Not Running:\n", not_running_services)
-        
-        elif choice == '3':
-            # Khởi chạy dịch vụ
-            service_name = input("Enter the name of the service to start (e.g., wuauserv, bits): ")
-            client_socket.sendall(f"START SERVICE {service_name}".encode())
-            response = client_socket.recv(4096).decode()
-            if "not allowed" in response.lower() or "not installed" in response.lower():
-                print(f"The service '{service_name}' is either not installed or not allowed to start.")
-            else:
-                print(response)
-        
-        elif choice == '0':
-            print("Going back to the main menu.")
-            break
+def stop_service(client_socket):
+    service_name = input("Nhập tên dịch vụ để dừng: ")
+    client_socket.sendall(f"STOP {service_name}".encode())
+    response = client_socket.recv(4096).decode()
+    print(response)
 
-        else:
-            print("Invalid choice. Please try again.")
+def start_service(client_socket):
+    service_name = input("Nhập tên dịch vụ để khởi động: ")
+    client_socket.sendall(f"START {service_name}".encode())
+    response = client_socket.recv(4096).decode()
+    print(response)
 
-# Khởi tạo socket và gọi hàm
+def main_menu():
+    print("\n--- SERVICE PROCESSING ---")
+    print("1. List Services Running")
+    print("2. Stop Service by Name")        
+    print("3. Start Service")       
+    print("0. Go Back to Main Menu")
+        
+    choice = input("Enter your choice: ")
+    return choice
+
+def list_start_stop_service(client_socket):    
+        while True:
+            choice = main_menu()
+            if choice == '1':
+                list_running_services(client_socket)
+            elif choice == '2':
+                stop_service(client_socket)
+            elif choice == '3':
+                start_service(client_socket)
+            elif choice == '0':
+                break
+            else:
+                print("Error choice. Try again.")
+
+
 if __name__ == "__main__":    
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client_socket.connect(('localhost', 8080))  # Địa chỉ IP và port của server
