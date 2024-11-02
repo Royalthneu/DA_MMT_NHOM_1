@@ -47,7 +47,7 @@ def list_start_stop_app(client_socket):
         #     else:
         #         print("\nApplications Not Running:\n", not_running_apps)
         
-        elif choice == '4':
+        elif choice == '3':
             # Khởi chạy ứng dụng
             app_name = input("Enter the name of the application to start (e.g: notepad.exe): ")
             client_socket.sendall(f"START_APP {app_name}".encode())
