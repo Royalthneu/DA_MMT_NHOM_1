@@ -36,6 +36,7 @@ def main():
 
         try:
             client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            client_socket.settimeout(3) # Set thời gian chời kết nối ở đây là 3s  
             client_socket.connect((server_ip, port))
             print("Connected to the server successfully!")
             break
