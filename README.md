@@ -11,3 +11,5 @@ docker run -it python-server
 **Đường link xóa phải trong ngoặc kép "":**
 
 Test máy Kha
+
+Test chức năng push
