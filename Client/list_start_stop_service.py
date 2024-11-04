@@ -1,4 +1,5 @@
 import socket
+from utils import clear_screen
 
 def list_running_services(client_socket):
     client_socket.sendall("LIST_SERVICE_RUNNING".encode())
@@ -17,22 +18,21 @@ def stop_service(client_socket):
     response = client_socket.recv(4096).decode()
     print(response)
 
-def main_menu():
-    print("\n--- SERVICE PROCESSING ---")
-    print("1. List Services Running")
-    print("2. Stop Service by Name")        
-    print("3. Start Service")       
-    print("0. Go Back to Main Menu")
-        
-    choice = input("Enter your choice: ")
-    return choice
-
 def list_start_stop_service(client_socket):    
+    clear_screen()
     while True:
-        choice = main_menu()
+        print("\n--- SERVICE PROCESSING ---")
+        print("1. List Services Running")
+        print("2. Stop Service by Name")        
+        print("3. Start Service")       
+        print("0. Go Back to Main Menu")
+            
+        choice = input("Enter your choice: ")
+    
         if choice == '1':
             list_running_services(client_socket)
         elif choice == '2':
+            list_running_services(client_socket)
             stop_service(client_socket)
         elif choice == '3':
             start_service(client_socket)

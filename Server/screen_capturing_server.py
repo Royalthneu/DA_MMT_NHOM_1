@@ -1,6 +1,5 @@
 import pyautogui
 import io
-from PIL import Image
 
 def screen_capturing(client_socket):
     # Capture the screen

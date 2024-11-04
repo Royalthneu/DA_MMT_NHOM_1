@@ -16,7 +16,7 @@ def screen_capturing(client_socket):
         print(f"Expected image size: {image_size} bytes")
     except Exception as e:
         print(f"Failed to receive image size: {e}")
-        input("Press any key to exit...")
+        input("Press Enter to exit...")
         return
 
     # Directly receive the image data in one go
@@ -24,12 +24,12 @@ def screen_capturing(client_socket):
         image_data = client_socket.recv(image_size)
         if image_size > 20000000: # neerly 20MB
             print("Image size is too large. Exiting...")
-            input("Press any key to exit...")
+            input("Press Enterto exit...")
             return
         
     except Exception as e:
         print(f"Error while receiving image data: {e}")
-        input("Press any key to exit...")
+        input("Press Enter to exit...")
         return
 
     # Save the image to the desktop
@@ -50,5 +50,5 @@ def screen_capturing(client_socket):
         print(f"Error saving screenshot: {e}")
 
     # Optional: Prompt the user to continue or exit
-    user_input = input("Press any keys to return to the main menu: ").strip().lower()
+    user_input = input("Press Enter to return to the main menu: ").strip().lower()
     return  # Exit the function
