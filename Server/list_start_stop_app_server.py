@@ -1,4 +1,5 @@
 #list_start_stop_app_server.py
+import os
 import platform
 import subprocess
 import socket
@@ -29,34 +30,27 @@ def list_running_applications(client_socket):
         print(error_msg)
         client_socket.sendall(error_msg.encode('utf-8'))        
 
-# # Liệt kê các ứng dụng chưa chạy
-# def list_not_running_applications(client_socket):
-#     try:
-#         # Lấy danh sách tiến trình đang chạy
-#         result = subprocess.run(["tasklist"], capture_output=True, text=True)
-#         running_apps = result.stdout.lower()
-        
-#         # Tìm các ứng dụng trong allowed_applications nhưng chưa chạy
-#         not_running_apps = [app for app in allowed_applications if app.lower() not in running_apps]
-#         not_running_list = "\n".join(not_running_apps) + "\n"
-        
-#         # Gửi danh sách ứng dụng chưa chạy về client
-#         client_socket.sendall(not_running_list.encode())
-#     except Exception as e:
-#         error_msg = f"Error listing not running applications: {e}\n"
-#         client_socket.sendall(error_msg.encode())
-
 # Khởi chạy một ứng dụng
-def start_application(client_socket, app_name):
-    # if not is_application_allowed(app_name):
-    #     error_msg = "Application is not allowed to start.\n"
-    #     client_socket.sendall(error_msg.encode())
-    #     return
-
+def start_application_byname(client_socket, app_name):
     try:
         # Khởi chạy ứng dụng
         subprocess.Popen([app_name])
         success_msg = f"Started application: {app_name}\n"
+        client_socket.sendall(success_msg.encode())
+    except Exception as e:
+        error_msg = f"Error starting application: {e}\n"
+        client_socket.sendall(error_msg.encode())
+
+def start_application_bypath(client_socket, app_path):
+    # Kiểm tra đường dẫn có hợp lệ không
+    if not os.path.isfile(app_path):
+        error_msg = f"Error: Application '{app_path}' not found or path is invalid.\n"
+        client_socket.sendall(error_msg.encode())
+        return    
+    try:
+        # Khởi chạy ứng dụng bằng subprocess với đường dẫn đầy đủ
+        subprocess.Popen([app_path], shell=True)
+        success_msg = f"Started application: {app_path}\n"
         client_socket.sendall(success_msg.encode())
     except Exception as e:
         error_msg = f"Error starting application: {e}\n"
@@ -94,12 +88,15 @@ def start_server():
             command = client_socket.recv(1024).decode().strip()
 
             if command == "LIST_APP_RUNNING":
-                list_running_applications(client_socket)
-            # elif command == "LIST_APP_NOT_RUNNING":
-            #     list_not_running_applications(client_socket)
-            elif command.startswith("START"):
+                list_running_applications(client_socket)            
+            elif command.startswith("START_APP_NAME"):
                 app_name = command.split(" ", 1)[1]  # Lấy tên ứng dụng từ lệnh
-                start_application(client_socket, app_name)
+                start_application_byname(client_socket, app_name)
+            elif command.startswith("START_APP_PATH"):
+                app_path = command.split(" ", 1)[1]  # Lấy đường dẫn ứng dụng
+                if '\\\\' in app_path:
+                    app_path = app_path.replace("\\\\", "\\")  # Thay thế '\\' thành '\'                
+                start_application_bypath(client_socket, app_path)            
             elif command.startswith("STOP"):
                 pid = int(command.split(" ", 1)[1])  # Lấy PID từ lệnh
                 stop_application(client_socket, pid)

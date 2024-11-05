@@ -1,7 +1,7 @@
 import socket
 import threading
 from screen_capturing_server import screen_capturing
-from list_start_stop_app_server import list_running_applications, start_application, stop_application
+from list_start_stop_app_server import list_running_applications, start_application_byname, start_application_bypath, stop_application
 from list_start_stop_service_server import list_running_services, start_service, stop_service
 from shutdown_reset_server import shutdown_server, reset_server
 from delete_copy_paste_server import delete_file, copy_file
@@ -24,13 +24,15 @@ def handle_client(client_socket):
                 list_running_applications(client_socket)
             # elif buffer.startswith("LIST_APP_NOT_RUNNING"):
             #     list_not_running_applications(client_socket)
-            elif buffer.startswith("START_APP"):
-                app_name = buffer.split()[1]
-                start_application(client_socket, app_name) 
+            elif buffer.startswith("START_APP_NAME"):
+                app_name = buffer.split(" ",1)[1]
+                start_application_byname(client_socket, app_name) 
+            elif buffer.startswith("START_APP_PATH"):
+                app_path = buffer.split(" ",1)[1]
+                start_application_bypath(client_socket, app_path)                 
             elif buffer.startswith("STOP_APP"):
                 pid = int(buffer.split()[1])
-                stop_application(client_socket, pid)
-                
+                stop_application(client_socket, pid)                
                 
             # Yêu cầu 2. xử lý SERVICES    
             elif buffer.startswith("LIST_SERVICE_RUNNING"):
@@ -38,10 +40,10 @@ def handle_client(client_socket):
             # elif buffer.startswith("LIST_SERVICE_NOT_RUNNING"):
             #     list_not_running_services(client_socket)
             elif buffer.startswith("START_SERVICE"):
-                service_name = buffer.split()[1]
+                service_name = buffer.split(" ",1)[1]
                 start_service(client_socket, service_name)
             elif buffer.startswith("STOP_SERVICE"):
-                service_name = buffer.split()[1]
+                service_name = buffer.split(" ",1)[1]
                 stop_service(client_socket, service_name) 
             
             # Yêu cầu 3 Shutdown/Reset máy SERVER

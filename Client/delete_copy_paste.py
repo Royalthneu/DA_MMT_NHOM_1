@@ -1,7 +1,13 @@
 import socket
 import os
 
+def replace_path(file_path):
+    if '\\\\' in file_path:
+         file_path = file_path.replace("\\\\", "\\")  # Thay thế '\\' thành '\'
+
+
 def delete_file_from_server(client_socket, file_path):
+    replace_path(file_path)
     client_socket.sendall(f"DELETE_FILE {file_path}".encode())
     response = client_socket.recv(1024).decode()
     print(response)
@@ -9,9 +15,11 @@ def delete_file_from_server(client_socket, file_path):
 def copy_file_from_server(client_socket):
     # Nhập đường dẫn file từ server
     file_path = input("Enter the full file path on the server to copy: ").strip()
+    replace_path(file_path)
     
     # Yêu cầu người dùng nhập vị trí dán file
     destination_folder = input("Enter the destination folder path on client to save the file: ").strip()
+    replace_path(file_path)
     
     # Kiểm tra nếu thư mục tồn tại
     if not os.path.exists(destination_folder):

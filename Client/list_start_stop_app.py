@@ -22,14 +22,29 @@ def stop_app_running_by_PID(client_socket):
     else:
         print("Invalid PID. Please enter a number.")
 
-def start_app(client_socket):
+def start_app_byname(client_socket):
     app_name = input("Enter the name of the application to start (e.g: notepad.exe): ")
-    client_socket.sendall(f"START_APP {app_name}".encode())
+    client_socket.sendall(f"START_APP_NAME {app_name}".encode())
     response = client_socket.recv(4096).decode()
     if "not allowed" in response.lower() or "not installed" in response.lower():
         print(f"The application '{app_name}' is either not installed or not allowed to start.")
     else:
         print(response)
+        
+def start_app_bypath(client_socket):
+    # Yêu cầu người dùng nhập đường dẫn đầy đủ đến file .exe
+    app_path = input("Enter the full path of the application to start (e.g., C:\\Windows\\System32\\notepad.exe): ")
+    
+    # Gửi lệnh START_APP cùng với đường dẫn đầy đủ của ứng dụng đến server
+    client_socket.sendall(f"START_APP_PATH {app_path}".encode())
+    
+    # Nhận phản hồi từ server
+    response = client_socket.recv(4096).decode()
+    if "not allowed" in response.lower() or "not found" in response.lower():
+        print(f"The application at '{app_path}' is either not found or not allowed to start.")
+    else:
+        print(response) 
+
 
 def list_start_stop_app(client_socket):
     clear_screen()
@@ -37,7 +52,8 @@ def list_start_stop_app(client_socket):
         print("\n--- APPLICATION PROCESSING ---")
         print("1. List Applications Running")
         print("2. Stop Application by PID")        
-        print("3. Start Application")       
+        print("3. Start Application by Name") 
+        print("4. Start Application by Path")        
         print("0. Go Back to Main Menu")
         
         choice = input("Enter your choice: ")
@@ -48,7 +64,9 @@ def list_start_stop_app(client_socket):
             list_app_running(client_socket)
             stop_app_running_by_PID(client_socket)            
         elif choice == '3':
-            start_app(client_socket)        
+            start_app_byname(client_socket) 
+        elif choice == '4':
+            start_app_bypath(client_socket)         
         elif choice == '0':
             print("Going back to the main menu.")
             break
