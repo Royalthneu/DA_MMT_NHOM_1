@@ -7,7 +7,7 @@ Bước 1. Chạy máy ảo làm máy server:
       
           - pyautogui (pip install pyautogui)
           
-          - pynput (pip install pyautogui)
+          - pynput (pip install pynput)
       
       1.2 Khuyến nghị: Tắt firewall trên máy ảo server (Trong nhiều trường hợp máy ảo không cần tắt firewall thì phần mềm vẫn chạy)
       
