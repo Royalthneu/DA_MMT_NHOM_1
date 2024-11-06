@@ -1,16 +1,18 @@
 Cài đặt các thư viện:
 + pyautogui
-+ pillow
 + pynput
 
-Tắt firewall trên máy ảo server
+Khuyến nghị: Tắt firewall trên máy ảo server
   
-Chạy server.py trên máy ảo server trước
+Chạy server.py trên máy ảo server trước và chọn "y" để đồng ý mở cổng 8080. Server sẽ hiển thị địa chỉ IP và Port của Server
 
-Chạy client.py trên máy client
+Chạy client.py trên máy client và nhập IP và Port của Server để kết nối.
 
 Chức năng 1.2 Stop App thì điền số PID
 
-Chức năng 1.4 Start App điển tên app và thêm đuôi ".exe"
+Chức năng 1.3 Start App by Name: điển tên app và thêm đuôi ".exe"
 
-Chức năng 7 (Delete) và 8 (Copy file and paste): Đường dẫn KHÔNG để trong ngoặc kép
+Chức năng 1.4 Start App by Path: điển đường dẫn app bao gồm cả tên file và đuôi. Không cần để trong ngoặc kép
+
+Chức năng 5. Server Screen Processing hình chụp sẽ được lưu trên Desktop. Dung lượng tối đa hình chụp là 20MB
+
