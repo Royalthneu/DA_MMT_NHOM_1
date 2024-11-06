@@ -35,7 +35,7 @@ Bước 2. Trên máy thật cũng cài đặt Python bản 3.13 và 2 thư vi�
 
         2.2 Mở cmd để chạy client.py bằng lệnh: python C:\Git\DA_MMT_NHOM_1\Client\client.py
 
-        2.3 Nhập [server IP hiển thị mục 1.5] vào dòng đầu tiên và nhập "8080" vào dòng thứ 2 (hiển thị tịa bước 1.5)
+        2.3 Nhập [server IP hiển thị mục 1.5] vào dòng đầu tiên và nhập "8080" vào dòng thứ 2 (hiển thị tại bước 1.5)
  
 Bước 3. Hoàn thành kết nối và chạy các chức năng của chương trình.
 
