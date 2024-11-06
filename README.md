@@ -40,6 +40,8 @@ Bước 2. Trên máy thật cũng cài đặt Python bản 3.13 và 2 thư vi�
  
 Bước 3. Hoàn thành kết nối và chạy các chức năng của chương trình.
 
+*:ưu ý:
+
 Chức năng 1.2 Stop App thì điền số PID
 
 Chức năng 1.3 Start App by Name: điển tên app và thêm đuôi ".exe"
