@@ -15,7 +15,7 @@ def delete_file(client_socket, file_path):
 
 def copy_file(client_socket, file_path):
     """Sao chép file tại đường dẫn được chỉ định trên server và gửi tới client."""
-    if os.path.exists(file_path):
+    if os.path.exists(file_path):        
         # Lấy kích thước file
         file_size = os.path.getsize(file_path)
         

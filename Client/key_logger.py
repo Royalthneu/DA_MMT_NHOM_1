@@ -1,5 +1,4 @@
 from pynput import keyboard
-import socket
 
 # Biến trạng thái keylogger
 keylogger_running = False

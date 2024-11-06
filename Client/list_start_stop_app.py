@@ -1,4 +1,3 @@
-#list_start_stop_app.py
 import socket
 from utils import clear_screen
 

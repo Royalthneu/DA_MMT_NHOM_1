@@ -1,4 +1,3 @@
-import socket
 import os
 
 def replace_path(file_path):
@@ -29,14 +28,20 @@ def copy_file_from_server(client_socket):
     # Tạo tên file dựa trên đường dẫn từ server
     filename = os.path.basename(file_path)
     destination_path = os.path.join(destination_folder, filename)
-    
+        
     # Gửi yêu cầu copy file đến server với đường dẫn file đầy đủ
     client_socket.sendall(f"COPY_FILE {file_path}".encode())
     
     # Nhận kích thước file
-    file_size = int.from_bytes(client_socket.recv(4), byteorder='big')
-
-    if file_size > 0:
+    file_size = int.from_bytes(client_socket.recv(4), byteorder='big')   
+     
+    if file_size == 0:
+        # Nếu file trống, tạo một file rỗng
+        with open(destination_path, 'wb') as f:
+            pass  # Tạo file rỗng
+        print(f"The size of file on server = 0. An empty file has been created at {destination_path}.")
+    else:
+        # Nếu file có kích thước, sao chép dữ liệu xuống client
         with open(destination_path, 'wb') as f:
             data_received = 0
             while data_received < file_size:
@@ -46,5 +51,4 @@ def copy_file_from_server(client_socket):
                 f.write(packet)
                 data_received += len(packet)
         print(f"File has been copied from server to {destination_path}.")
-    else:
-        print("File not found on server.")
+        
