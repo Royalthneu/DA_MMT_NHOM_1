@@ -1,38 +1,46 @@
 import os
 import uuid
 import platform
+import tkinter as tk
+from tkinter import messagebox
 
 def screen_capturing(client_socket):
-    client_socket.sendall("SCREEN_CAPTURING".encode())
+    # Create a hidden root window for messagebox
+    root = tk.Tk()
+    root.withdraw()
 
     try:
+        # Request screen capture
+        client_socket.sendall("SCREEN_CAPTURING".encode())
+
         # Receive the size of the incoming image
         image_size_bytes = client_socket.recv(4)
         if not image_size_bytes:
-            print("No size information received. Exiting...")
+            messagebox.showerror("Error", "No size information received from the server.")
             return
         
         image_size = int.from_bytes(image_size_bytes, byteorder='big')
         print(f"Expected image size: {image_size} bytes")
+
+        # Check if the image size exceeds a limit (e.g., 20MB)
+        if image_size > 20000000:  # nearly 20MB
+            messagebox.showerror("Error", "Image size is too large.")
+            return
     except Exception as e:
-        print(f"Failed to receive image size: {e}")
-        input("Press Enter to exit...")
+        messagebox.showerror("Error", f"Failed to receive image size: {e}")
         return
 
-    # Directly receive the image data in one go
+    # Receive the image data
     try:
         image_data = client_socket.recv(image_size)
-        if image_size > 20000000: # neerly 20MB
-            print("Image size is too large. Exiting...")
-            input("Press Enterto exit...")
+        if not image_data or len(image_data) != image_size:
+            messagebox.showerror("Error", "Incomplete image data received.")
             return
-        
     except Exception as e:
-        print(f"Error while receiving image data: {e}")
-        input("Press Enter to exit...")
+        messagebox.showerror("Error", f"Error while receiving image data: {e}")
         return
 
-    # Save the image to the desktop
+    # Determine the desktop path and save the image
     screenshot_filename = f"screenshot_{uuid.uuid4()}.png"
 
     if platform.system() == "Windows":
@@ -46,9 +54,6 @@ def screen_capturing(client_socket):
         with open(desktop_path, 'wb') as img_file:
             img_file.write(image_data)
         print(f"Screenshot saved as {screenshot_filename} on Desktop.")
+        messagebox.showinfo("Success", f"Screenshot saved successfully as {screenshot_filename}.")
     except Exception as e:
-        print(f"Error saving screenshot: {e}")
-
-    # Optional: Prompt the user to continue or exit
-    user_input = input("Press Enter to return to the main menu: ").strip().lower()
-    return  # Exit the function
+        messagebox.showerror("Error", f"Failed to save screenshot: {e}")
