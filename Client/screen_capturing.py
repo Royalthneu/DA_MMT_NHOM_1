@@ -1,6 +1,8 @@
-import socket
+import os
+import platform
 import tkinter as tk
 from tkinter import messagebox
+import uuid
 
 def screen_capturing(client_socket):
     client_socket.sendall("SCREEN_CAPTURING".encode())
@@ -28,8 +30,19 @@ def screen_capturing(client_socket):
         print(f"Error while receiving image data: {e}")
         input("Press Enter to exit...")
         return
+    
+    screenshot_filename = f"screenshot_{uuid.uuid4()}.png"
 
-    screenshot_filename = f"screenshot.png"
+    if platform.system() == "Windows":
+        desktop_path = os.path.join(os.environ['USERPROFILE'], 'Desktop', screenshot_filename)
+    elif platform.system() == "Darwin":  # macOS
+        desktop_path = os.path.join(os.path.expanduser("~"), 'Desktop', screenshot_filename)
+    else:  # Assuming Linux
+        desktop_path = os.path.join(os.path.expanduser("~"), 'Desktop', screenshot_filename)
+    
+    with open(desktop_path, 'wb') as img_file:
+            img_file.write(image_data)
+
     messagebox.showinfo("Screenshot Saved", f"Screenshot saved as {screenshot_filename} on Desktop.")
 
 def screen_capture(client_socket):
